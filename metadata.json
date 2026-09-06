@@ -1,0 +1,6 @@
+{
+  "name": "FoodCourt POS & Self-Service",
+  "description": "Sistem kasir food court terpusat dengan multi-tenant, otentikasi peran, pembayaran kasir, kitchen display tenant, dan self-service pelanggan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

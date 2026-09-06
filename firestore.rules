@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function hasRequiredOrderFields(data) {
+      return data.id is string
+        && data.orderNumber is number
+        && data.tableNumber is string
+        && data.customerName is string
+        && (data.paymentStatus in ['unpaid', 'paid'])
+        && (data.overallStatus in ['unpaid', 'cooking', 'ready', 'completed'])
+        && data.totalAmount is number
+        && data.items is list;
+    }
+
+    // Orders Collection: Read and write accessible for live self-service, kitchen KDS, and cashier
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if hasRequiredOrderFields(request.resource.data);
+      allow update: if hasRequiredOrderFields(request.resource.data);
+      allow delete: if true;
+    }
+
+    // Tenants Collection
+    match /tenants/{tenantId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Menu Catalog Collection
+    match /menu/{menuId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Connection Health Check
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

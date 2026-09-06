@@ -1,0 +1,95 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User account in the food court system",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "kasir", "tenant", "customer"] },
+        "tenantId": { "type": "string" }
+      },
+      "required": ["id", "username", "name", "role"]
+    },
+    "Tenant": {
+      "title": "Tenant",
+      "description": "Food court stall tenant",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "category": { "type": "string" },
+        "color": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "commissionRate": { "type": "number" },
+        "revenue": { "type": "number" }
+      },
+      "required": ["id", "name", "category", "isActive"]
+    },
+    "MenuItem": {
+      "title": "MenuItem",
+      "description": "Menu dish or beverage offered by a tenant",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "tenantName": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string", "enum": ["makanan", "minuman", "snack"] },
+        "imageUrl": { "type": "string" },
+        "isAvailable": { "type": "boolean" },
+        "hasSpicyLevel": { "type": "boolean" },
+        "hasVariants": { "type": "boolean" },
+        "options": { "type": "array" }
+      },
+      "required": ["id", "tenantId", "name", "price", "category", "isAvailable"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Food court customer order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderNumber": { "type": "number" },
+        "tableNumber": { "type": "string" },
+        "customerName": { "type": "string" },
+        "source": { "type": "string", "enum": ["customer", "kasir"] },
+        "createdAt": { "type": "string" },
+        "paymentStatus": { "type": "string", "enum": ["unpaid", "paid"] },
+        "paymentMethod": { "type": "string", "enum": ["cash", "qris", "card"] },
+        "cashGiven": { "type": "number" },
+        "change": { "type": "number" },
+        "paidAt": { "type": "string" },
+        "overallStatus": { "type": "string", "enum": ["unpaid", "cooking", "ready", "completed"] },
+        "totalAmount": { "type": "number" },
+        "tenantStatuses": { "type": "array" },
+        "items": { "type": "array" }
+      },
+      "required": ["id", "orderNumber", "tableNumber", "customerName", "paymentStatus", "overallStatus", "totalAmount", "items"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User accounts and profiles"
+    },
+    "/tenants/{tenantId}": {
+      "schema": { "$ref": "#/entities/Tenant" },
+      "description": "Food court stall tenants"
+    },
+    "/menu/{menuId}": {
+      "schema": { "$ref": "#/entities/MenuItem" },
+      "description": "Food court menu catalog items"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer food court orders and status"
+    }
+  }
+}
